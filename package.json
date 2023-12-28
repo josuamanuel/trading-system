@@ -1,0 +1,59 @@
+{
+  "name": "trading-systems",
+  "version": "0.1.0",
+  "homepage": "https://github.com/josuamanuel/trading-systems",
+  "author": "josuamanuel@hotmail.com",
+  "repository": "github:josuamanuel/trading-systems",
+  "bugs": {
+    "url": "https://github.com/josuamanuel/trading-systems",
+    "email": "josuamanuel@hotmail.com"
+  },
+  "description": "trading-systems to create trading systems in javascript",
+  "keywords": [
+    "trading",
+    "trade",
+    "technical indicators",
+    "stock market api",
+    "stocks history",
+    "stock market"
+  ],
+  "files": [
+    "./dist/"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "browser": "dist/browser/trading-systems.min.js",
+  "main": "./dist/mjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "test": "export CONFIG_ENV=Testing && export LOG_LEVEL=SILENT && mocha ./test/**/*.js",
+    "buildTypes": "tsc -p tsconfig-types.json",
+    "copyMapsAndTypes": "rsync -av --include '*/' --include '*.d.ts.map' --exclude '*' ./genTypes/ ./types/ && rsync -av --include '*/' --include '*.d.ts' --exclude '*' --ignore-existing ./genTypes/ ./types/",
+    "genAndCopyTypes": "npm run buildTypes && npm run copyMapsAndTypes",
+    "buildLib": "rm -rf ./dist && mkdir ./dist && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && ./fixup",
+    "buildWeb": "rollup -c && ./awkChangenNodePerf.sh && rollup -c rollup.config.min.js && rollup -c rollup.config.dts.js && cp -r ./dist/browser ./examples",
+    "testBuildRequire": "cd  examples/nodeRequire && rm -rf ./node_modules && rm -f package-lock.json && npm install --omit=dev  && rm -rf ./node_modules/trading-systems/* && cp -rf ../../dist ./node_modules/trading-systems/ && cp ../../package.json ./node_modules/trading-systems && node index.js",
+    "testBuildImport": "cd  examples/nodeImport  && rm -rf ./node_modules && rm -f package-lock.json && npm install --omit=dev  && rm -rf ./node_modules/trading-systems/* && cp -rf ../../dist ./node_modules/trading-systems/ && cp ../../package.json ./node_modules/trading-systems && node index.js",
+    "build": "npm test && npm run genAndCopyTypes && npm run buildLib && npm run buildWeb && npm run testBuildRequire && npm run testBuildImport"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/node": "^20.4.1",
+    "mocha": "^10.2.0",
+    "rollup": "^4.1.4",
+    "rollup-plugin-dts": "^6.0.1",
+    "rollup-plugin-node-polyfills": "^0.2.1"
+  },
+  "dependencies": {
+  }
+}
